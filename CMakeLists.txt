@@ -14,7 +14,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   # rospy
   std_msgs
-  message_generation
+  geometry_msgs
+  sensor_msgs
+  # message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -56,10 +58,7 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message1.msg
 #   Message2.msg
 # )
-add_message_files(
-  FILES
-  Motors.msg
-)
+
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -80,10 +79,12 @@ add_message_files(
 #   DEPENDENCIES
 #   common_msgs#   std_msgs
 # )
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+#   geometry_msgs
+#   sensor_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -115,7 +116,8 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  CATKIN_DEPENDS roscpp std_msgs message_runtime
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs message_runtime
+  # CATKIN_DEPENDS roscpp std_msgs geometry_msgs message_runtime
 #  INCLUDE_DIRS include
 #  LIBRARIES ssmr_4wd
 #  CATKIN_DEPENDS common_msgs roscpp rospy std_msgs
@@ -145,24 +147,36 @@ include_directories(
 ## either from message generation or dynamic reconfigure
 # add_dependencies(ssmr_4wd ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-## Declare a C++ executable
-# add_executable(ssmr_4wd_node src/ssmr_4wd_node.cpp)
-add_executable(driver_motor_cape
-  src/driver_motor_cape.cpp
-  src/MotorCapeListener.cpp)
+# ## Declare a C++ executable
+# # add_executable(ssmr_4wd_node src/ssmr_4wd_node.cpp)
+# add_executable(driver_motor_cape
+#   src/driver_motor_cape.cpp
+#   src/MotorCapeListener.cpp)
 
-## Add cmake target dependencies of the executable
-## same as for the library above
-# add_dependencies(ssmr_4wd_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(driver_motor_cape ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# ## Add cmake target dependencies of the executable
+# ## same as for the library above
+# # add_dependencies(ssmr_4wd_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(driver_motor_cape ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-## Specify libraries to link a library or executable target against
-# target_link_libraries(ssmr_4wd_node
+# ## Specify libraries to link a library or executable target against
+# # target_link_libraries(ssmr_4wd_node
+# #   ${catkin_LIBRARIES}
+# # )
+# target_link_libraries(driver_motor_cape
 #   ${catkin_LIBRARIES}
+#   motor_cape
 # )
-target_link_libraries(driver_motor_cape
+
+
+add_executable(driver_lms9ds1
+  src/driver_lms9ds1.cpp)
+  # src/Lms9ds1Publisher.cpp
+  # src/Lms9ds1.cpp)
+
+add_dependencies(driver_lms9ds1 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(driver_lms9ds1
   ${catkin_LIBRARIES}
-  motor_cape
 )
 
 #############
